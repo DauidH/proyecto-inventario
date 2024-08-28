@@ -1,0 +1,78 @@
+<div class="row">
+  <ng-container
+    *ngFor="let objFunc of arregloFuncionalidades"
+    [ngTemplateOutlet]="objFunc.nombreFuncionalidad == 'Empresas' ? cumple : nocumple"
+    [ngTemplateOutletContext]="{
+      colorBg: 'bg-info',
+      icono: 'fa fa-building',
+      nombre: objFunc.nombreFuncionalidad,
+      ruta: objFunc.urlFuncionalidad
+    }"
+  >
+  </ng-container>
+
+  <ng-container
+    *ngFor="let objFunc of arregloFuncionalidades"
+    [ngTemplateOutlet]="objFunc.nombreFuncionalidad == 'Pacientes' ? cumple : nocumple"
+    [ngTemplateOutletContext]="{
+      colorBg: 'bg-blue',
+      icono: 'fa fa-users',
+      nombre: objFunc.nombreFuncionalidad,
+      ruta: objFunc.urlFuncionalidad
+    }"
+  >
+  </ng-container>
+
+  <ng-container
+    *ngFor="let objFunc of arregloFuncionalidades"
+    [ngTemplateOutlet]="objFunc.nombreFuncionalidad == 'Acompañantes' ? cumple : nocumple"
+    [ngTemplateOutletContext]="{
+      colorBg: 'bg-info',
+      icono: 'fa fa-users',
+      nombre: objFunc.nombreFuncionalidad,
+      ruta: objFunc.urlFuncionalidad
+    }"
+  >
+  </ng-container>
+
+  <ng-container
+    *ngFor="let objFunc of arregloFuncionalidades"
+    [ngTemplateOutlet]="objFunc.nombreFuncionalidad == 'Ingresos' ? cumple : nocumple"
+    [ngTemplateOutletContext]="{
+      colorBg: 'bg-red',
+      icono: 'fa fa-list-ul',
+      nombre: objFunc.nombreFuncionalidad,
+      ruta: objFunc.urlFuncionalidad
+    }"
+  >
+  </ng-container>
+
+  <ng-container
+    *ngFor="let objFunc of arregloFuncionalidades"
+    [ngTemplateOutlet]="objFunc.nombreFuncionalidad == 'Usuarios' ? cumple : nocumple"
+    [ngTemplateOutletContext]="{
+      colorBg: 'bg-orange',
+      icono: 'fa fa-users',
+      nombre: objFunc.nombreFuncionalidad,
+      ruta: objFunc.urlFuncionalidad
+    }"
+  >
+  </ng-container>
+</div>
+
+<ng-template #cumple let-colorBg="colorBg" let-icono="icono" let-nombre="nombre" let-ruta="ruta">
+  <div class="col-xl-3 col-md-6">
+    <div class="widget widget-stats {{ colorBg }}">
+      <div class="stats-icon"><i class="{{ icono }}"></i></div>
+      <div class="stats-info">
+        <h3>{{ nombre }}</h3>
+        <p>&nbsp;</p>
+      </div>
+      <div class="stats-link">
+        <a [routerLink]="[ruta]">Ver Módulo <i class="fa fa-arrow-alt-circle-right"></i></a>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #nocumple> </ng-template>

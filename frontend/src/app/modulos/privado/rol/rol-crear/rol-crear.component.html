@@ -1,0 +1,32 @@
+<app-panel title="Crear">
+  <div class="panel-body">
+    <div class="d-flex justify-content-center">
+
+      <form #frmEditar="ngForm" class="col-md-10" (submit)="frmEditar.form.valid && enviarFormulario(frmEditar)"
+        novalidate>
+
+        <div class="row">
+          <label class="form-label col-form-label col-md-2">Nombre:</label>
+          <div class="col-md-10">
+            <input type="text" class="form-control" id="nom" name="nom" [(ngModel)]="rol.nombreRol" #nom="ngModel"
+              [ngClass]="{
+          'is-invalid': frmEditar.submitted && nom.invalid
+        }" required />
+            <div class="invalid-feedbak" *ngIf="frmEditar.submitted && nom.invalid">
+              <span style="color: red" *ngIf="nom?.errors?.['required']">Ingrese el nombre del rol</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row py-3">
+          <div class="col-md-8 offset-md-2">
+            <button type="submit" class="btn btn-primary w-100px me-5px">Crear</button>
+            <button type="button" class="btn btn-default w-100px" (click)="modalRef.hide()">Cancelar</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</app-panel>

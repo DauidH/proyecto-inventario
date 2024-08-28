@@ -1,0 +1,140 @@
+<div *ngIf="cargaFinalizada; else spinner">
+  <div class="card border-top border-0 border-4 border-info">
+    <div class="card-body">
+      <form #frmInfo="ngForm" (submit)="frmInfo.form.valid && enviarFormulario(frmInfo)" novalidate>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <div class="form-group mb-3 col-md-6">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 150px"> Nombres </span>
+                <input
+                  type="text"
+                  class="form-control border-start-0"
+                  id="nom"
+                  name="nom"
+                  [(ngModel)]="usuario.nombresUsuario"
+                  #nom="ngModel"
+                  required
+                />
+              </div>
+              <div class="invalid-feedbak text-left" *ngIf="frmInfo.submitted && nom.invalid">
+                <span style="color: red" *ngIf="nom?.errors?.['required']">Digite sus nombres</span>
+              </div>
+            </div>
+
+            <div class="form-group mb-3 col-md-6">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 150px">Apellidos</span>
+
+                <input
+                  type="text"
+                  class="form-control border-start-0"
+                  id="ape"
+                  name="ape"
+                  [(ngModel)]="usuario.apellidosUsuario"
+                  #ape="ngModel"
+                  required
+                />
+              </div>
+              <div class="invalid-feedbak text-left" *ngIf="frmInfo.submitted && ape.invalid">
+                <span style="color: red" *ngIf="ape?.errors?.['required']">Digite sus apellidos</span>
+              </div>
+            </div>
+            <div class="form-group mb-3 col-md-6">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 150px">Tipo de documento</span>
+
+                <select
+                  class="form-select selectpicker border-start-0"
+                  [(ngModel)]="usuario.tipoDocumentoUsuario"
+                  name="tipo"
+                  id="tipo"
+                  #tipo="ngModel"
+                  style="cursor: pointer"
+                  [ngClass]="{ 'is-invalid': frmInfo.submitted && usuario.tipoDocumentoUsuario == '88' }"
+                  required
+                >
+                  <option *ngFor="let objTipo of arregloTipos" [disabled]="objTipo.acronimo == '88'" [ngValue]="objTipo.acronimo">
+                    {{ objTipo.tipo }}
+                  </option>
+                </select>
+              </div>
+              <div class="invalid-feedbak text-left" *ngIf="frmInfo.submitted && usuario.tipoDocumentoUsuario == '88'">
+                <span style="color: red" *ngIf="usuario.tipoDocumentoUsuario == '88'">Seleccione el tipo documento</span>
+              </div>
+            </div>
+            <div class="form-group mb-3 col-md-4">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 150px">Documento</span>
+
+                <input
+                  type="number"
+                  class="form-control border-start-0"
+                  id="doc"
+                  name="doc"
+                  [(ngModel)]="usuario.documentoUsuario"
+                  #doc="ngModel"
+                  required
+                />
+              </div>
+              <div class="invalid-feedbak text-left" *ngIf="frmInfo.submitted && doc.invalid">
+                <span style="color: red" *ngIf="doc?.errors?.['required']">Ingrese su numero de identificacion</span>
+              </div>
+            </div>
+
+            <div class="form-group mb-3 col-md-4">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 150px">Teléfono</span>
+
+                <input
+                  type="number"
+                  class="form-control border-start-0"
+                  id="tel"
+                  name="tel"
+                  [(ngModel)]="usuario.telefonoUsuario"
+                  #tel="ngModel"
+                  required
+                />
+              </div>
+              <div class="invalid-feedbak text-left" *ngIf="frmInfo.submitted && tel.invalid">
+                <span style="color: red" *ngIf="tel?.errors?.['required']">Ingrese su Telefono</span>
+              </div>
+            </div>
+
+            <div class="form-group mb-3 col-md-5">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 150px">Rol asignado</span>
+
+                <select
+                  class="form-select"
+                  [(ngModel)]="usuario.codRol"
+                  name="crol"
+                  id="crol"
+                  #crol="ngModel"
+                  style="cursor: pointer"
+                  [ngClass]="{ 'is-invalid': frmInfo.submitted && crol.invalid }"
+                  required
+                >
+                  <option *ngFor="let miRol of arregloRol" [disabled]="miRol.codRol == null" [ngValue]="miRol.codRol">
+                    {{ miRol.nombreRol }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-danger" [routerLink]="['/private/user/manage']">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--BEGIN ventanas modales-->
+
+<ng-template #spinner>
+  <app-spinner></app-spinner>
+</ng-template>

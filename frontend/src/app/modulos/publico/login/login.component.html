@@ -1,0 +1,94 @@
+<!-- BEGIN login -->
+<div class="login login-with-news-feed">
+  <!-- BEGIN news-feed -->
+  <div class="news-feed">
+    <div class="news-image" style="background-image: url('{{ imagenInicio }}')"></div>
+    <div class="news-caption">
+      <h4 class="caption-title">&nbsp;</h4>
+      <p>&nbsp;</p>
+    </div>
+  </div>
+  <!-- END news-feed -->
+
+  <!-- BEGIN login-container -->
+  <div class="login-container">
+    <!-- BEGIN login-header -->
+    <div class="login-header mb-30px">
+      <div class="brand">
+        <div class="d-flex align-items-center">
+          <span class="logo"></span>
+          <b class="fs-19px">Sistema </b> &nbsp; <span class="fs-18px">Inventarios</span>
+        </div>
+        <small>Bienvenido, ingrese sus credenciales para iniciar</small>
+      </div>
+    </div>
+    <!-- END login-header -->
+
+    <!-- BEGIN login-content -->
+    <div class="login-content">
+      <form #frmSesion="ngForm" (ngSubmit)="frmSesion.form.valid && enviarFormuario(frmSesion)" class="fs-13px">
+        <div class="form-floating mb-15px">
+          <input
+            type="email"
+            class="form-control h-45px fs-13px"
+            placeholder=""
+            id="corr"
+            name="corr"
+            [(ngModel)]="acceso.correoAcceso"
+            #corr="ngModel"
+            required
+            [email]="true"
+            [ngClass]="{ 'is-invalid': frmSesion.submitted && corr.invalid }"
+            autocomplete="off"
+          />
+
+          <label for="corr" class="d-flex align-items-center fs-14px text-gray-600">
+            <div class="text-danger error" *ngIf="frmSesion.submitted && corr.invalid; else labelCorreo">
+              <span *ngIf="corr.errors?.['required']">Correo eléctronico</span>
+              <span *ngIf="corr.errors?.['email']">Correo eléctronico no valido</span>
+            </div>
+            <ng-template #labelCorreo>
+              <span>Correo eléctronico</span>
+            </ng-template>
+          </label>
+        </div>
+
+        <div class="form-floating mb-15px">
+          <input
+            type="password"
+            class="form-control h-45px fs-13px"
+            placeholder=""
+            id="cla"
+            name="cla"
+            [(ngModel)]="acceso.claveAcceso"
+            #cla="ngModel"
+            required
+            [ngClass]="{ 'is-invalid': frmSesion.submitted && cla.invalid }"
+            autocomplete="off"
+          />
+          <label for="cla" class="d-flex align-items-center fs-14px text-gray-600">
+            <div class="text-danger error" *ngIf="frmSesion.submitted && cla.invalid; else labelClave">
+              <span *ngIf="cla.errors?.['required']">Contraseña</span>
+            </div>
+            <ng-template #labelClave>
+              <span>Contraseña</span>
+            </ng-template>
+          </label>
+        </div>
+
+        <div class="mb-15px">
+          <button type="submit" class="btn btn-theme d-block h-45px w-100 btn-lg fs-14px">Acceder</button>
+        </div>
+        <!--<div class="mb-40px pb-40px text-dark">
+          ¿No tienes una cuenta? Clic
+          <a [routerLink]="['/land/register']" class="text-primary">aquí</a>
+          para registrarte.
+        </div>-->
+        <hr class="bg-gray-600 opacity-2" />
+      </form>
+    </div>
+    <!-- END login-content -->
+  </div>
+  <!-- END login-container -->
+</div>
+<!-- END login -->

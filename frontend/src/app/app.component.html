@@ -1,0 +1,8 @@
+<div>
+  <router-outlet></router-outlet>
+  <app-theme-panel
+    (appDarkModeChanged)="onAppDarkModeChanged($event)"
+    (appThemeChanged)="onAppThemeChanged($event)"
+    *ngIf="!appSettings.appThemePanelNone"
+  ></app-theme-panel>
+</div>

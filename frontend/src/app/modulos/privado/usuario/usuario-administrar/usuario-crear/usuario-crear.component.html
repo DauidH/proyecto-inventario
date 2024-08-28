@@ -1,0 +1,229 @@
+<div *ngIf="cargaFinalizada; else spinner">
+  <ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/private/dash']"><i class="fa fa-home"></i></a>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:;">Usuarios</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/private/user/manage']">Administrar</a></li>
+    <li class="breadcrumb-item active">Crear</li>
+  </ol>
+
+  <h1 class="page-header">Usuarios <small>Crear</small></h1>
+
+  <app-panel title="Crear">
+    <div class="row">
+      <!-- BEGIN nav-tabs -->
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+            <span class="d-sm-none">Tab 1</span>
+            <span class="d-sm-block d-none"><i class="fa fa-user font-18 me-1"></i> Información personal</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+            <span class="d-sm-none">Tab 2</span>
+            <span class="d-sm-block d-none"><i class="fa fa-key font-18 me-1"></i> Usuario</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
+            <span class="d-sm-none">Tab 3</span>
+            <span class="d-sm-block d-none"><i class="fa fa-images font-18 me-1"></i> Foto usuario</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#default-tab-4" data-bs-toggle="tab" class="nav-link">
+            <span class="d-sm-none">Tab 4</span>
+            <span class="d-sm-block d-none"><i class="fa fa-user-lock font-18 me-1"></i> Permisos usuario</span>
+          </a>
+        </li>
+      </ul>
+      <!-- END nav-tabs -->
+
+      <!-- BEGIN tab-content -->
+      <div class="tab-content panel rounded-0 p-3 m-0">
+        <!-- BEGIN tab-pane -->
+        <div class="tab-pane fade active show" id="default-tab-1">
+          <div class="card border-top border-0 border-4 border-info">
+            <div class="card-body">
+              <form #frmInfo="ngForm" (submit)="frmInfo.form.valid && enviarFormulario(frmInfo)" novalidate>
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                    <div class="form-group mb-3 col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-text bg-second" style="width: 150px"> Nombres </span>
+                        <input
+                          type="text"
+                          class="form-control border-start-0"
+                          id="nom"
+                          name="nom"
+                          [(ngModel)]="usuario.nombresUsuario"
+                          #nom="ngModel"
+                          [ngClass]="{ 'is-invalid': frmInfo.submitted && nom.invalid }"
+                          required
+                        />
+                      </div>
+                      <div class="invalid-feedbak text-start text-danger" *ngIf="frmInfo.submitted && nom.invalid">
+                        <span *ngIf="nom?.errors?.['required']">Digite sus nombres</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group mb-3 col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-text bg-second" style="width: 150px">Apellidos</span>
+
+                        <input
+                          type="text"
+                          class="form-control border-start-0"
+                          id="ape"
+                          name="ape"
+                          [(ngModel)]="usuario.apellidosUsuario"
+                          #ape="ngModel"
+                          [ngClass]="{ 'is-invalid': frmInfo.submitted && ape.invalid }"
+                          required
+                        />
+                      </div>
+                      <div class="invalid-feedbak text-start text-danger" *ngIf="frmInfo.submitted && ape.invalid">
+                        <span *ngIf="ape?.errors?.['required']">Digite sus apellidos</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group mb-3 col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-text bg-second" style="width: 150px">Tipo de documento</span>
+                        <select
+                          class="form-select selectpicker border-start-0"
+                          style="cursor: pointer"
+                          [(ngModel)]="usuario.tipoDocumentoUsuario"
+                          name="tipo"
+                          id="tipo"
+                          #tipo="ngModel"
+                          [ngClass]="{ 'is-invalid': frmInfo.submitted && usuario.tipoDocumentoUsuario == 'SE' }"
+                          required
+                        >
+                          <option *ngFor="let objTipo of arregloTipos" [disabled]="objTipo.acronimo == 'SE'" [ngValue]="objTipo.acronimo">
+                            {{ objTipo.tipo }}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="invalid-feedbak text-start text-danger" *ngIf="frmInfo.submitted && usuario.tipoDocumentoUsuario == 'SE'">
+                        <span *ngIf="usuario.tipoDocumentoUsuario == 'SE'">Seleccione su tipo de documento</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group mb-3 col-md-4">
+                      <div class="input-group">
+                        <span class="input-group-text bg-second" style="width: 150px">Documento</span>
+
+                        <input
+                          type="number"
+                          class="form-control border-start-0"
+                          id="doc"
+                          name="doc"
+                          [(ngModel)]="usuario.documentoUsuario"
+                          #doc="ngModel"
+                          [ngClass]="{ 'is-invalid': frmInfo.submitted && doc.invalid }"
+                          required
+                        />
+                      </div>
+                      <div class="invalid-feedbak text-start text-danger" *ngIf="frmInfo.submitted && doc.invalid">
+                        <span *ngIf="doc?.errors?.['required']">Ingrese su numero de identificacion</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group mb-3 col-md-4">
+                      <div class="input-group">
+                        <span class="input-group-text bg-second" style="width: 150px">Teléfono</span>
+
+                        <input
+                          type="number"
+                          class="form-control border-start-0"
+                          id="tel"
+                          name="tel"
+                          [(ngModel)]="usuario.telefonoUsuario"
+                          #tel="ngModel"
+                          [ngClass]="{ 'is-invalid': frmInfo.submitted && tel.invalid }"
+                          required
+                        />
+                      </div>
+                      <div class="invalid-feedbak text-start text-danger" *ngIf="frmInfo.submitted && tel.invalid">
+                        <span *ngIf="tel?.errors?.['required']">Ingrese su Telefono</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group mb-3 col-md-5">
+                      <div class="input-group">
+                        <span class="input-group-text bg-second" style="width: 150px">Rol asignado</span>
+
+                        <select
+                          class="form-select"
+                          [(ngModel)]="usuario.codRol"
+                          name="crol"
+                          id="crol"
+                          #crol="ngModel"
+                          style="cursor: pointer"
+                          [ngClass]="{ 'is-invalid': frmInfo.submitted && crol.invalid }"
+                          required
+                        >
+                          <option *ngFor="let miRol of arregloRol" [disabled]="miRol.codRol == null" [ngValue]="miRol.codRol">
+                            {{ miRol.nombreRol }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-3">
+                    <button type="submit" class="btn btn-theme" [disabled]="hizoClic">Guardar</button>
+                    <a class="btn btn-outline-red btn-sm" [routerLink]="['/private/user/manage']" routerLinkActive="router-link-active"
+                      >Cancelar</a
+                    >
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- END tab-pane -->
+        <!-- BEGIN tab-pane -->
+        <div class="tab-pane fade" id="default-tab-2">
+          <div class="container mb-2">
+            <div role="alert" class="alert alert-danger">
+              <!----><strong>Alerta! <br /></strong> Este espacio esta bloqueado <br />
+              <strong>Registra tu informacion personal</strong>
+            </div>
+          </div>
+        </div>
+        <!-- END tab-pane -->
+        <!-- BEGIN tab-pane -->
+        <div class="tab-pane fade" id="default-tab-3">
+          <div class="container mb-2">
+            <div role="alert" class="alert alert-danger">
+              <!----><strong>Alerta! <br /></strong> Este espacio esta bloqueado <br />
+              <strong>Registra tu informacion personal</strong>
+            </div>
+          </div>
+        </div>
+        <!-- END tab-pane -->
+        <!-- BEGIN tab-pane -->
+        <div class="tab-pane fade" id="default-tab-4">
+          <div class="container mb-2">
+            <div role="alert" class="alert alert-danger">
+              <!----><strong>Alerta! <br /></strong> Este espacio esta bloqueado <br />
+              <strong>Registra tu informacion personal</strong>
+            </div>
+          </div>
+        </div>
+        <!-- END tab-pane -->
+      </div>
+      <!-- END tab-content -->
+    </div>
+  </app-panel>
+</div>
+
+<!--BEGIN ventanas modales-->
+
+<ng-template #spinner>
+  <app-spinner></app-spinner>
+</ng-template>

@@ -1,0 +1,22 @@
+@import "~@fortawesome/fontawesome-free/css/all.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+.spinner {
+  height: 500px;
+  font-style: 25px;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable,
+  #printable * {
+    visibility: visible;
+  }
+  #printable {
+    position: absolute;
+    left: 152px;
+    top: 0px;
+  }
+}

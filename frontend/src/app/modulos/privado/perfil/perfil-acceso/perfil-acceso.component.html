@@ -1,0 +1,104 @@
+<div *ngIf="cargaFinalizada; else spinner">
+  <div class="card border-top border-0 border-4 border-info">
+    <div class="row d-flex justify-content-center">
+      <div class="col-sm-1"></div>
+      <div class="card-body col-sm-12">
+        <form #frmAcceso="ngForm" (submit)="frmAcceso.form.valid && enviarFormulario(frmAcceso)" novalidate>
+          <div class="form-group mb-2">
+            <div class="input-group">
+              <span class="input-group-text" style="width: 250px">Usuario</span>
+
+              <input
+                type="text"
+                class="form-control border-start-0"
+                id="correo"
+                name="correo"
+                [(ngModel)]="acceso.correoAcceso"
+                #correo="ngModel"
+                required
+                [pattern]="patronCorreo"
+              />
+            </div>
+            <div class="invalid-feedbak text-left" *ngIf="frmAcceso.submitted && correo.invalid">
+              <span style="color: red" *ngIf="correo?.errors?.['required']">Ingrese su correo</span>
+              <span style="color: red" *ngIf="correo?.errors?.['pattern']">Correo no valido</span>
+            </div>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="cam" name="cam" style="width: 40px" [(ngModel)]="cargaClave" />
+            <label class="form-check-label">&nbsp;Cambiar Contraseña</label>
+          </div>
+
+          <div *ngIf="cargaClave; else bloquearClave">
+            <div class="form-group mb-2">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 250px">Nueva Contraseña</span>
+
+                <input
+                  type="password"
+                  class="form-control border-start-0"
+                  id="con"
+                  name="con"
+                  [(ngModel)]="acceso.claveAcceso"
+                  #con="ngModel"
+                  autocomplete="new-password"
+                  required
+                />
+              </div>
+              <div class="invalid-feedbak text-left" *ngIf="frmAcceso.submitted && con.invalid">
+                <span style="color: red" *ngIf="con?.errors?.['required']">Digite la contraseña</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 250px">Confirmar Nueva Contraseña </span>
+                <input
+                  type="password"
+                  class="form-control border-start-0"
+                  id="rec"
+                  name="rec"
+                  [(ngModel)]="acceso.reClaveAcceso"
+                  #rec="ngModel"
+                  autocomplete="new-password"
+                  required
+                  pattern="{{ acceso.claveAcceso }}"
+                />
+              </div>
+              <div class="invalid-feedbak text-left" *ngIf="frmAcceso.submitted && rec.invalid">
+                <span style="color: red" *ngIf="rec?.errors?.['required']">Confirmar la cotraseña</span>
+                <span style="color: red" *ngIf="rec?.errors?.['pattern']">Contraseña diferente</span>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #bloquearClave>
+            <div class="form-group mb-2">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 250px">Nueva contraseña</span>
+
+                <input type="password" class="form-control border-start-0" id="con" name="con" disabled />
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <span class="input-group-text" style="width: 250px">Confirmar contraseña </span>
+                <input type="password" class="form-control border-start-0" id="rec" name="rec" disabled />
+              </div>
+            </div>
+          </ng-template>
+
+          <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-3">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a class="btn btn-danger ml-2" [routerLink]="['/private/home']">Cancelar</a>
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-1"></div>
+    </div>
+  </div>
+</div>
+<!--BEGIN ventanas modales-->
+
+<ng-template #spinner>
+  <app-spinner></app-spinner>
+</ng-template>

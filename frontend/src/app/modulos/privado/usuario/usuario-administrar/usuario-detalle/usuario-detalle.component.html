@@ -1,0 +1,97 @@
+<div *ngIf="cargaFinalizada; else spinner">
+  <ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/private/dash']"><i class="fa fa-home"></i></a>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:;">Usuarios</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/private/user/manage']">Administrar</a></li>
+    <li class="breadcrumb-item active">Editar</li>
+  </ol>
+
+  <h1 class="page-header">Usuarios Editar<small>&nbsp;</small></h1>
+
+  <app-panel title="Editar">
+    <div class="alert alert-light" style="margin-bottom: 0px">
+      <div class="d-flex">
+        <div class="d-flex">
+          <a class="w-60px" href="javascript:;">
+            <img
+              alt="foto_usuario"
+              class="mw-100 rounded"
+              onerror="this.src='../../../assets/img/base/user-13.jpg';"
+              [src]="'data:image/png;base64,' + fotoFavorita"
+            />
+          </a>
+          <div class="ps-3 flex-1">
+            <h5 class="mb-1">{{ usuario.nombresUsuario }} {{ usuario.apellidosUsuario }}</h5>
+            <p class="mb-0" [ngClass]="acceso.correoAcceso.includes('PX_') ? 'text-red' : ''">
+              {{ acceso.correoAcceso.includes("PX_") ? "Pendiente" : acceso.correoAcceso }}
+            </p>
+            <p class="mb-0">{{ usuario.telefonoUsuario }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mx-auto">
+      <!-- BEGIN nav-tabs -->
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+            <span class="d-sm-none">Tab 1</span>
+            <span class="d-sm-block d-none"><i class="fa fa-user font-18 me-1"></i> Información personal</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+            <span class="d-sm-none">Tab 2</span>
+            <span class="d-sm-block d-none"><i class="fa fa-key font-18 me-1"></i> Usuario</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
+            <span class="d-sm-none">Tab 3</span>
+            <span class="d-sm-block d-none"><i class="fa fa-images font-18 me-1"></i> Foto usuario</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#default-tab-4" data-bs-toggle="tab" class="nav-link">
+            <span class="d-sm-none">Tab 4</span>
+            <span class="d-sm-block d-none"><i class="fa fa-user-lock font-18 me-1"></i> Permisos usuario</span>
+          </a>
+        </li>
+      </ul>
+      <!-- END nav-tabs -->
+      <!-- BEGIN tab-content -->
+      <div class="tab-content panel rounded-0 p-3 m-0">
+        <!-- BEGIN tab-pane -->
+        <div class="tab-pane fade active show" id="default-tab-1">
+          <app-usuario-personal [codUsuario]="usuario.codUsuario"></app-usuario-personal>
+        </div>
+        <!-- END tab-pane -->
+        <!-- BEGIN tab-pane -->
+        <div class="tab-pane fade" id="default-tab-2">
+          <app-usuario-acceso [codUsuario]="usuario.codUsuario"></app-usuario-acceso>
+        </div>
+        <!-- END tab-pane -->
+        <!-- BEGIN tab-pane -->
+        <div class="tab-pane fade" id="default-tab-3">
+          <app-usuario-foto [codUsuario]="usuario.codUsuario"></app-usuario-foto>
+        </div>
+        <!-- END tab-pane -->
+        <!-- BEGIN tab-pane -->
+        <div class="tab-pane fade" id="default-tab-4">
+          <app-usuario-permiso [codUsuario]="usuario.codUsuario"></app-usuario-permiso>
+        </div>
+        <!-- END tab-pane -->
+      </div>
+      <!-- END tab-content -->
+    </div>
+  </app-panel>
+</div>
+
+<!--BEGIN ventanas modales-->
+
+<ng-template #spinner>
+  <app-spinner></app-spinner>
+</ng-template>

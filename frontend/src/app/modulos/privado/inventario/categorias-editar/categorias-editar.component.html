@@ -1,0 +1,83 @@
+<div *ngIf="cargaFinalizada; else spinner">
+  <app-panel title="Editar">
+    <div class="panel-body">
+      <div class="d-flex justify-content-center">
+        <form #frmEditar="ngForm" class="col-md-10" (submit)="frmEditar.form.valid && enviarFormulario(frmEditar)" novalidate>
+          <div class="row mb-15px">
+            <label class="form-label col-form-label col-md-2">Nombre:</label>
+            <div class="col-md-10">
+              <input
+                type="text"
+                class="form-control"
+                id="nom"
+                name="nom"
+                [(ngModel)]="categoria.nombreCategoria"
+                #nom="ngModel"
+                [ngClass]="{
+                  'is-invalid': frmEditar.submitted && nom.invalid
+                }"
+                required
+              />
+              <div class="invalid-feedbak" *ngIf="frmEditar.submitted && nom.invalid">
+                <span style="color: red" *ngIf="nom?.errors?.['required']">Ingrese el nombre de la categoria</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-15px">
+            <label class="form-label col-form-label col-md-2">Descripción:</label>
+            <div class="col-md-10">
+              <textarea
+                type="text"
+                class="form-control"
+                id="des"
+                rows="5"
+                name="des"
+                [(ngModel)]="categoria.descripcionCategoria"
+                #des="ngModel"
+                [ngClass]="{
+                  'is-invalid': frmEditar.submitted && des.invalid
+                }"
+                required
+              >
+              </textarea>
+              <div class="invalid-feedbak" *ngIf="frmEditar.submitted && des.invalid">
+                <span style="color: red" *ngIf="des?.errors?.['required']">Ingrese la descripción de la categoria</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-15px">
+            <label class="form-label col-form-label col-md-2">Estado:</label>
+            <div class="col-md-10">
+              <select
+                style="cursor: pointer"
+                class="form-select"
+                [(ngModel)]="categoria.estadoCategoria"
+                name="est"
+                id="est"
+                #est="ngModel"
+              >
+                <option *ngFor="let objEstado of arregloEstados" [ngValue]="objEstado.valor">
+                  {{ objEstado.texto }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row py-3">
+            <div class="col-md-8 offset-md-2">
+              <button type="submit" class="btn btn-primary w-100px me-5px">Actualizar</button>
+              <button type="button" class="btn btn-default w-100px" (click)="modalRef.hide()">Cancelar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </app-panel>
+</div>
+<!--BEGIN ventanas modales-->
+
+<ng-template #spinner>
+  <app-spinner></app-spinner>
+</ng-template>

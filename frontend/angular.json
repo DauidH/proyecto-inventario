@@ -1,0 +1,112 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "frontend": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "lity",
+              "jquery",
+              "quill",
+              "bezier-easing",
+              "ev-emitter",
+              "moment",
+              "apexcharts",
+              "jsvectormap"
+            ],
+            "outputPath": "dist/frontend",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "tsconfig.app.json",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": [
+              "src/styles.css",
+              "src/scss/angular.scss",
+              "node_modules/angular-calendar/css/angular-calendar.css",
+              "node_modules/jquery.fancytree/dist/skin-win8/ui.fancytree.min.css",
+              "node_modules/jstree/dist/themes/default/style.css",
+              "node_modules/ngx-toastr/toastr.css"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/apexcharts/dist/apexcharts.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js",
+              "node_modules/jstree/dist/jstree.min.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10kb",
+                  "maximumError": "20kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "frontend:build:production",
+              "port": 8098
+            },
+            "development": {
+              "browserTarget": "frontend:build:development",
+              "port": 8099
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "frontend:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": ["zone.js", "zone.js/testing"],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.css"],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "7d1ed6be-0bcc-48e8-8672-1f2ab98d0192"
+  }
+}

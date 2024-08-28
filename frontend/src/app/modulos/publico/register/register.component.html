@@ -1,0 +1,247 @@
+<!-- BEGIN register -->
+<div class="register register-with-news-feed">
+  <!-- BEGIN news-feed -->
+  <div class="news-feed">
+    <div
+      class="news-image"
+      style="background-image: url('{{ imagenLogin }}')"
+    ></div>
+    <div class="news-caption">
+      <h4 class="caption-title">&nbsp;</h4>
+      <p>
+        &nbsp;
+      </p>
+    </div>
+  </div>
+  <!-- END news-feed -->
+
+  <!-- BEGIN register-container -->
+  <div class="register-container">
+    <!-- BEGIN register-header -->
+    <div class="register-header mb-25px h1">
+      <div class="mb-1">Crear Cuenta</div>
+      <small class="d-block fs-15px lh-16"
+        >Ingrese los datos para la creación de su cuenta</small
+      >
+    </div>
+    <!-- END register-header -->
+
+    <!-- BEGIN register-content -->
+    <div class="register-content">
+      <form
+        #frmRegistro="ngForm"
+        (submit)="frmRegistro.form.valid && formSubmit(frmRegistro)"
+      >
+        <div class="mb-3">
+          <div class="row gx-3">
+            <div class="col-md-6 mb-2 mb-md-0">
+              <label class="mb-2">
+                <div
+                  class="text-danger"
+                  *ngIf="frmRegistro.submitted && nom.invalid; else labelNombre"
+                >
+                  <span *ngIf="nom.errors?.['required']"
+                    >Nombre requerido *</span
+                  >
+                </div>
+                <ng-template #labelNombre>
+                  <span>Nombres<span class="text-danger"> *</span></span>
+                </ng-template>
+              </label>
+
+              <input
+                type="text"
+                id="nom"
+                name="nom"
+                [(ngModel)]="registro.nombresUsuario"
+                #nom="ngModel"
+                [ngClass]="{
+                  'is-invalid': frmRegistro.submitted && nom.invalid
+                }"
+                required
+                class="form-control"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="mb-2">
+                <div
+                  class="text-danger"
+                  *ngIf="
+                    frmRegistro.submitted && ape.invalid;
+                    else labelApellido
+                  "
+                >
+                  <span *ngIf="ape.errors?.['required']"
+                    >Apellido requerido *</span
+                  >
+                </div>
+                <ng-template #labelApellido>
+                  <span>Apellidos<span class="text-danger"> *</span></span>
+                </ng-template>
+              </label>
+              <input
+                type="text"
+                id="ape"
+                name="ape"
+                [(ngModel)]="registro.apellidosUsuario"
+                #ape="ngModel"
+                [ngClass]="{
+                  'is-invalid': frmRegistro.submitted && ape.invalid
+                }"
+                class="form-control"
+                autocomplete="off"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">
+            <div
+              class="text-danger"
+              *ngIf="frmRegistro.submitted && corr.invalid; else labelCorreo"
+            >
+              <span *ngIf="corr.errors?.['required']">Correo requerido *</span>
+              <span *ngIf="corr.errors?.['pattern']">Formato incorrecto *</span>
+            </div>
+            <ng-template #labelCorreo>
+              <span>Correo electrónico<span class="text-danger"> *</span></span>
+            </ng-template>
+          </label>
+          <input
+            type="text"
+            id="corr"
+            name="corr"
+            [(ngModel)]="registro.correoAcceso"
+            #corr="ngModel"
+            [ngClass]="{
+              'is-invalid': frmRegistro.submitted && corr.invalid
+            }"
+            class="form-control"
+            [pattern]="patronCorreo"
+            autocomplete="off"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">
+            <div
+              class="text-danger"
+              *ngIf="frmRegistro.submitted && cla.invalid; else labelClave"
+            >
+              <span *ngIf="cla.errors?.['required']"
+                >Contraseña requerida *</span
+              >
+              <span *ngIf="cla.errors?.['minlength']"
+                >Mínimo 4 caracteres *</span
+              >
+            </div>
+            <ng-template #labelClave>
+              <span>Contraseña<span class="text-danger"> *</span></span>
+            </ng-template>
+          </label>
+          <input
+            type="password"
+            id="cla"
+            name="cla"
+            minlength="4"
+            [(ngModel)]="registro.claveAcceso"
+            #cla="ngModel"
+            [ngClass]="{ 'is-invalid': frmRegistro.submitted && cla.invalid }"
+            class="form-control"
+            autocomplete="off"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">
+            <div
+              class="text-danger"
+              *ngIf="frmRegistro.submitted && recla.invalid; else labelReClave"
+            >
+              <span *ngIf="recla.errors?.['required']"
+                >Contraseña requerida *</span
+              >
+              <span *ngIf="recla.errors?.['pattern']">No coincide *</span>
+            </div>
+            <ng-template #labelReClave>
+              <span
+                >Confirmar contraseña<span class="text-danger"> *</span></span
+              >
+            </ng-template>
+          </label>
+          <input
+            type="password"
+            id="recla"
+            name="recla"
+            [(ngModel)]="registro.reClaveAcceso"
+            #recla="ngModel"
+            [ngClass]="{
+              'is-invalid': frmRegistro.submitted && recla.invalid
+            }"
+            [pattern]="registro.claveAcceso"
+            class="form-control"
+            autocomplete="off"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="termi"
+              name="termi"
+              [(ngModel)]="terminos"
+              #termi="ngModel"
+              [ngClass]="{
+                'is-invalid': frmRegistro.submitted && termi.invalid
+              }"
+              required
+            />
+            <label class="form-check-label">
+              <div
+                class="text-danger"
+                *ngIf="
+                  frmRegistro.submitted && termi.invalid;
+                  else labelTerminos
+                "
+              >
+                <span *ngIf="termi.errors?.['required']"
+                  >Por favor acepte los
+                  <a href="javascript:;">términos de uso</a> y la
+                  <a href="javascript:;">política de privacidad</a></span
+                >
+              </div>
+              <ng-template #labelTerminos>
+                He leído y acepto los
+                <a href="javascript:;">términos de uso</a> y la
+                <a href="javascript:;">política de privacidad</a>
+              </ng-template>
+            </label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <button type="submit" class="btn btn-theme d-block w-100">
+            Crear cuenta
+          </button>
+        </div>
+
+        <div class="mb-4 pb-5">
+          ¿Ya tienes cuenta? Clic
+          <a [routerLink]="['/land/login']">aquí</a> para iniciar sesión.
+        </div>
+      </form>
+    </div>
+    <!-- END register-content -->
+  </div>
+  <!-- END register-container -->
+</div>
+<!-- END register -->

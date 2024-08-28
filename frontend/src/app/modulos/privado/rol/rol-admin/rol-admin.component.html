@@ -1,0 +1,222 @@
+<div *ngIf="cargaFinalizada; else spinner">
+  <ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/private/dash']"><i class="fa fa-home"></i></a>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:;">Rol</a></li>
+    <li class="breadcrumb-item active">Adminstrar</li>
+  </ol>
+
+  <h1 class="page-header">Rol Administrar<small>&nbsp;</small></h1>
+  <app-panel title="&nbsp;">
+    <div class="d-flex justify-content-end mb-3">
+      <a href="javascript:;" class="btn btn-sm btn-success" (click)="openModalCrear()"> Agregar&nbsp;<i class="fa fa-plus"></i> </a>
+    </div>
+
+    <div class="row" style="padding-bottom: 15px">
+      <div class="col-sm-12 col-md-4">
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <select
+              name="cantRegis"
+              style="font-weight: normal"
+              class="form-select form-select-sm"
+              [(ngModel)]="cantidadMostrar"
+              (change)="cambiarPaginador($event.target)"
+            >
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <span class="form-text">registros</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-4 d-flex justify-content-end">
+            <span class="form-text">Buscar por nombre:</span>
+          </div>
+          <div class="col-md-8 d-flex justify-content-end">
+            <input
+              id="autocomplete"
+              class="form-control"
+              [(ngModel)]="_cadenaBuscar"
+              placeholder="Nombre rol"
+              [typeahead]="fuenteDatos"
+              [typeaheadMinLength]="3"
+              [typeaheadIsFirstItemActive]="false"
+              [adaptivePosition]="true"
+              (ngModelChange)="sizeProperty($event)"
+              (typeaheadOnSelect)="selecionadoCombo()"
+              (keyup.enter)="enterCombo($event)"
+              [typeaheadSelectFirstItem]="false"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEGIN table-responsive -->
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered table-striped">
+        <thead class="">
+          <tr>
+            <th style="width: 10%" class="text-center">Código</th>
+            <th style="width: 60%" class="text-center">Nombre</th>
+            <th style="width: 10%" class="text-center">Estado</th>
+            <th style="width: 10%" class="text-center">Usuarios</th>
+            <th style="width: 10%" colspan="3">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody class="table-sm">
+          <tr
+            *ngFor="
+              let objRol of arregloRol
+                | paginate
+                  : {
+                      id: 'rolPaginacion',
+                      itemsPerPage: cantidadMostrar,
+                      currentPage: paginaActual,
+                      totalItems: cantidadTotalRegistros
+                    };
+              let indice = index
+            "
+          >
+            <td scope="row" style="text-align: center">{{ indice + 1 }}</td>
+            <td>{{ objRol.nombreRol }}</td>
+            <td style="text-align: center">
+              <a
+                style="cursor: pointer; text-decoration: none"
+                (click)="
+                  objRol.cantidadUsuarios != 0 ? abrirModalSugerencia(modalAdvertencia, objRol) : abrirModalEstado(modalEstado, objRol)
+                "
+                [ngClass]="objRol.estadoRol == 1 ? 'text-success' : 'text-danger'"
+              >
+                {{ objRol.estadoRol == 1 ? "ACTIVO" : "INACTIVO" }}
+              </a>
+            </td>
+            <td style="text-align: center">{{ objRol.cantidadUsuarios }}</td>
+
+            <td style="text-align: center">
+              <a (click)="openModalEditar(objRol.codRol)" style="cursor: pointer" title="Actualizar: {{ objRol.nombreRol }}">
+                <i class="fa fa-edit fs-5 text-theme"></i
+              ></a>
+
+              <a style="cursor: pointer" title="Eliminar {{ objRol.nombreRol }}">
+                <i
+                  class="fa fa-trash-alt fs-5"
+                  (click)="
+                    objRol.cantidadUsuarios != 0
+                      ? abrirModalSugerencia(modalAdvertencia, objRol)
+                      : abrirModalEliminar(modalEliminar, objRol)
+                  "
+                  [ngClass]="objRol.cantidadUsuarios != 0 ? 'text-secondary' : 'text-danger'"
+                ></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <small
+          ><strong>{{ cantidadTotalRegistros }}</strong> Registros encontrados en <strong>{{ cantidadPaginas }}</strong> paginas</small
+        >
+      </div>
+
+      <div class="col-md-8 d-flex justify-content-end">
+        <small>
+          <pagination-controls
+            id="rolPaginacion"
+            (pageChange)="handlePageChange($event)"
+            [maxSize]="10"
+            [directionLinks]="true"
+            previousLabel="Anterior"
+            nextLabel="Siguiente"
+          >
+          </pagination-controls>
+        </small>
+      </div>
+    </div>
+    <!-- END table-responsive -->
+  </app-panel>
+</div>
+<!--BEGIN ventanas modales-->
+
+<ng-template #spinner>
+  <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #modalEliminar>
+  <div class="modal-header bg-dark text-white py-2">
+    <h5 class="modal-title">{{ modalTitulo }}</h5>
+    <div>
+      <a href="javascript:;" class="btn btn-xs btn-danger btnCerrar" (click)="modalRef.hide()">
+        <i class="fa fa-times"></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="modal-body bg-transparent">
+    <span
+      >{{ modalCuerpo }}<br />
+      <strong>{{ modalContenido }}</strong></span
+    >
+  </div>
+  <div class="modal-footer py-2">
+    <button class="btn btn-primary btn-sm" (click)="botonEliminar()">Eliminar</button>
+    <button class="btn btn-outline-dark btn-sm" (click)="cerrarModal()">Cancelar</button>
+  </div>
+</ng-template>
+
+<ng-template #modalAdvertencia>
+  <div class="modal-header bg-dark text-white py-2">
+    <h5 class="modal-title">{{ modalTitulo }}</h5>
+    <div>
+      <a href="javascript:;" class="btn btn-xs btn-danger btnCerrar" (click)="modalRef.hide()">
+        <i class="fa fa-times"></i>
+      </a>
+    </div>
+  </div>
+  <div class="modal-body bg-transparent">
+    <span
+      >{{ modalCuerpo }}<br />
+      <strong>{{ modalContenido }}</strong></span
+    >
+  </div>
+  <div class="modal-footer py-2">
+    <button class="btn btn-outline-dark btn-sm" (click)="cerrarModal()">Cancelar</button>
+  </div>
+</ng-template>
+
+<ng-template #modalEstado>
+  <div class="modal-header bg-dark text-white py-2">
+    <h5 class="modal-title">{{ modalTitulo }}</h5>
+    <div>
+      <a href="javascript:;" class="btn btn-xs btn-danger btnCerrar" (click)="modalRef.hide()">
+        <i class="fa fa-times"></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="modal-body bg-transparent">
+    <span
+      >{{ modalCuerpo }}<br />
+      <strong>{{ modalContenido }}</strong></span
+    >
+  </div>
+  <div class="modal-footer py-2">
+    <button class="btn btn-sm" [ngClass]="rolSeleccionado.estadoRol == 1 ? 'btn-danger' : 'btn-primary'" (click)="botonEstado()">
+      {{ rolSeleccionado.estadoRol == 1 ? "Inactivar" : "Activar" }}
+    </button>
+    <button class="btn btn-outline-dark btn-sm" (click)="cerrarModal()">Cancelar</button>
+  </div>
+</ng-template>
+<!-- END ventanas modales -->

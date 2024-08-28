@@ -1,0 +1,138 @@
+<div *ngIf="cargaFinalizada; else spinner">
+  <div class="card border-top border-0 border-4 border-info">
+    <div class="card-body">
+      <form #frmFoto="ngForm" (submit)="frmFoto.form.valid && nuevaImagen(frmFoto)" novalidate>
+        <div class="row m-3">
+          <div class="col-md-5"></div>
+          <div class="col-md-2">
+            <div class="card">
+              <div class="card-header">
+                <img
+                  [src]="imagen.base64Imagen"
+                  alt="foto_perdida"
+                  style="width: 220px; height: auto; align-content: center"
+                  position="relative"
+                  class="w-100 shadow-1-strong rounded mb-4"
+                  onerror="this.src='../../../assets/img/base/user-13.jpg'"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="form-group col-md-6 text-center mb-3">
+            <div class="input-group">
+              <span class="input-group-text text-center" style="width: 150px">Agregar Foto</span>
+              <input
+                type="text"
+                class="form-control border-start-0"
+                id="nomFot"
+                name="nomFot"
+                [(ngModel)]="imagen.nombrePublicoImagen"
+                #nomFot="ngModel"
+                accept="image/x-png, image/jpeg, image/gif"
+                required
+              />
+              <button type="button" class="btn btn-info btn-sm" (click)="fileInput.click()">
+                <span><i class="fa fa-plus" style="color: white"></i></span>
+                <input
+                  type="file"
+                  style="display: none"
+                  id="foto_docente"
+                  name="foto_docente"
+                  #fileInput
+                  (change)="seleccionarFoto($event)"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="invalid-feedbak text-center mb-4" *ngIf="frmFoto.submitted && nomFot.invalid">
+          <span style="color: red" *ngIf="nomFot?.errors?.['required']">Seleccione una Foto</span>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <a class="btn btn-danger ml-2" [routerLink]="['/private/user/manage']">Cancelar</a>
+        </div>
+      </form>
+    </div>
+    <!-- Begin Vista imagenes -->
+    <div class="text-center border-top border-0 border-4 border-info" *ngIf="cargaFinalizada == true; else spinner">
+      <div class="row mx-auto">
+        <div class="col-lg-2 col-md-12 m-4 mb-lg-0" *ngFor="let miImagen of arregloImagenes">
+          <div class="card">
+            <div class="card-header">
+              <a [routerLink]="" (click)="verFoto(miImagen.base64Imagen)" target="_blank" style="cursor: pointer">
+                <img
+                  [src]="'data:image/png;base64,' + miImagen.base64Imagen"
+                  alt="foto_perdida"
+                  style="height: 230px"
+                  class="w-100 shadow-1-strong rounded mb-4"
+                  onerror="this.src='../../assets/images/base/user-13.jpg'"
+                />
+              </a>
+            </div>
+            <div class="card-body" style="padding: 8px">
+              <div class="d-flex justify-content-center align-items-center">
+                <div class="btn-group mr-1">
+                  <span class="btn-group float-end ms-20px p-2px bg-black bg-opacity-20 rounded">
+                    <a
+                      class="btn btn-sm btn-white border-0"
+                      data-change="widget-theme"
+                      data-theme="light"
+                      [ngClass]="arregloImagenes.length < 2 ? 'disabled' : ''"
+                      (click)="openModal(modalImagen, miImagen)"
+                    >
+                      <i class="fa fa-trash text-danger"></i
+                    ></a>
+                    <a
+                      class="btn btn-sm btn-white border-0"
+                      data-change="widget-theme"
+                      data-theme="dark"
+                      [ngClass]="miImagen.favoritaImagen != 1 ? 'text-light btn-white' : 'text-warning btn-warning'"
+                      (click)="convertirFavorita(miImagen)"
+                      [title]="miImagen.favoritaImagen == 1 ? 'Favorita' : 'Convertir en Favorita'"
+                    >
+                      <i class="fa fa-star"></i
+                    ></a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Vista imagenes -->
+  </div>
+</div>
+<!--BEGIN ventanas modales-->
+
+<ng-template #spinner>
+  <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #modalImagen>
+  <div class="modal-header bg-dark text-white py-2">
+    <h5 class="modal-title">{{ modalTitulo }}</h5>
+    <button type="button" class="btn btn-sm text-white" (click)="modalRef.hide()">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div class="modal-body bg-transparent mx-auto">
+    <img
+      [src]="'data:image/png;base64,' + imagenSeleccionada.base64Imagen"
+      alt="foto_perdida"
+      style="width: auto; height: 260px; align-content: center"
+      position="relative"
+      class="img-thumbnail"
+      onerror="this.src='../assets/img/user/agregarFoto.png';"
+      src=""
+    />
+  </div>
+  <div class="modal-footer py-2">
+    <button class="btn btn-primary btn-sm" (click)="botonEliminarModal()">eliminar</button>
+    <button class="btn btn-outline-dark btn-sm" (click)="this.modalRef.hide()">Cancelar</button>
+  </div>
+</ng-template>

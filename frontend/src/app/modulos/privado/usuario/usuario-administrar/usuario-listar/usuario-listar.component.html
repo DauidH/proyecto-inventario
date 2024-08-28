@@ -1,0 +1,234 @@
+<div *ngIf="cargaFinalizada; else spinner">
+  <ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/private/dash']"><i class="fa fa-home"></i></a>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:;">Usuarios</a></li>
+    <li class="breadcrumb-item active">Adminstrar</li>
+  </ol>
+
+  <h1 class="page-header">Usuarios Administrar<small>&nbsp;</small></h1>
+
+  <app-panel title="&nbsp;">
+    <div class="d-flex justify-content-end">
+      <div class="panel-heading-btn mb-3">
+        <a href="javascript:;" class="btn btn-sm btn-info" [routerLink]="['/private/user/add']"> Nuevo&nbsp;<i class="fa fa-plus"></i> </a>
+      </div>
+    </div>
+    <!-- INICIO: Buscador -->
+    <div class="row" style="padding-bottom: 15px">
+      <div class="col-md-3">
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <select
+              name="cantRegis"
+              style="font-weight: normal"
+              class="form-select form-select-sm"
+              [(ngModel)]="cantidadMostrar"
+              (change)="cambiarPaginador($event.target)"
+            >
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <span class="form-text">registros</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-4">
+            <div class="input-group">
+              <span class="input-group-text bg-theme">Filtros</span>
+              <select
+                style="font-weight: normal; cursor: pointer"
+                class="form-select"
+                [(ngModel)]="_columnaBuscar"
+                (change)="medioBusqueda($event)"
+              >
+                <option *ngFor="let objOpcion of opcionesBusqueda" [ngValue]="objOpcion.codigo" [selected]="objOpcion.codigo == 1">
+                  Buscar por {{ objOpcion.opcion }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-8 d-flex justify-content-end">
+            <input
+              id="autocomplete"
+              class="form-control"
+              [(ngModel)]="_cadenaBuscar"
+              placeholder="{{ opcionBuscar }} Usuario"
+              [typeahead]="fuenteDatos"
+              [typeaheadMinLength]="3"
+              [typeaheadIsFirstItemActive]="false"
+              (ngModelChange)="sizeProperty($event)"
+              (typeaheadOnSelect)="selecionadoCombo()"
+              (keyup.enter)="enterCombo($event)"
+              [typeaheadSelectFirstItem]="false"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FIN: Buscador -->
+    <!-- BEGIN table-responsive -->
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered table-striped">
+        <thead class="">
+          <tr>
+            <th style="width: 6%" class="text-center">Codigo</th>
+            <th style="width: 34%" class="text-center">Nombre - Rol</th>
+            <th style="width: 20%" class="text-center">Documento</th>
+            <th style="width: 25%" class="text-center">Correo - Telefono</th>
+            <th style="width: 8%" class="text-center">Estado</th>
+            <th style="width: 5%" class="text-center">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody class="table-sm">
+          <tr
+            *ngFor="
+              let objUsuario of arregloUsuario
+                | paginate
+                  : {
+                      id: 'rolPaginacion',
+                      itemsPerPage: cantidadMostrar,
+                      currentPage: paginaActual,
+                      totalItems: cantidadTotalRegistros
+                    };
+              let indice = index
+            "
+          >
+            <td class="text-center">{{ indice + 1 }}</td>
+            <td [ngClass]="objUsuario.nombresUsuario != '' ? '' : 'colorRojo'">
+              {{ objUsuario.nombresUsuario != "" ? objUsuario.nombresUsuario : "Pendiente" }}
+              {{ objUsuario.apellidosUsuario }}<br />
+              <span class="text-secondary">{{ objUsuario.nombreRol }}</span>
+            </td>
+            <td>
+              <span
+                >{{ objUsuario.tipoDocumentoUsuario }}&nbsp;
+                <span [ngClass]="objUsuario.documentoUsuario.includes('DOC_') ? 'text-red' : 'text-secondary'">{{
+                  objUsuario.documentoUsuario.includes("DOC_") ? "Pendiente" : " / " + objUsuario.documentoUsuario
+                }}</span>
+              </span>
+            </td>
+            <td [ngClass]="objUsuario.nombresUsuario != '' ? '' : 'colorRojo'">
+              <span [ngClass]="objUsuario.correoAcceso?.includes('PX_') ? 'text-red' : 'text-dark'">{{
+                objUsuario.correoAcceso?.includes("PX_") ? "Pendiente" : objUsuario.correoAcceso
+              }}</span>
+              <br />
+              <span class="text-secondary">{{ objUsuario.telefonoUsuario != "" ? objUsuario.telefonoUsuario : "Pendiente" }}</span>
+            </td>
+            <td class="text-center">
+              <a
+                style="cursor: pointer; text-decoration: none"
+                [ngClass]="objUsuario.estadoUsuario < 2 ? 'text-green' : 'text-red'"
+                (click)="
+                  objUsuario.estadoUsuario < 2
+                    ? abrirModalEliminar(modalEliminar, objUsuario)
+                    : abrirModalSugerencia(modalAdvertencia, objUsuario)
+                "
+              >
+                <span *ngIf="objUsuario.estadoUsuario == 1; else inactivo"> ACTIVO </span>
+                <ng-template #inactivo> INACTIVO</ng-template>
+              </a>
+            </td>
+            <td class="text-center">
+              <a
+                [routerLink]="['/private/user/update/', objUsuario.codUsuario]"
+                style="cursor: pointer"
+                title="Actualizar: {{ objUsuario.nombresUsuario }}"
+              >
+                <i class="fa fa-edit iconoEditar text-theme fs-5"></i
+              ></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <small
+          ><strong>{{ cantidadTotalRegistros }}</strong> Registros encontrados en <strong>{{ cantidadPaginas }}</strong> paginas</small
+        >
+      </div>
+
+      <div class="col-md-6 d-flex justify-content-end">
+        <small>
+          <pagination-controls
+            id="rolPaginacion"
+            (pageChange)="handlePageChange($event)"
+            [maxSize]="10"
+            [directionLinks]="true"
+            previousLabel="Anterior"
+            nextLabel="Siguiente"
+          >
+          </pagination-controls>
+        </small>
+      </div>
+    </div>
+    <!-- END table-responsive -->
+  </app-panel>
+</div>
+
+<!--BEGIN ventanas modales-->
+
+<ng-template #spinner>
+  <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #modalEliminar>
+  <div class="modal-header bg-dark text-white py-2">
+    <h5 class="modal-title">{{ modalTitulo }}</h5>
+    <div>
+      <a href="javascript:;" class="btn btn-xs btn-danger btnCerrar" (click)="modalRef.hide()">
+        <i class="fa fa-times"></i>
+      </a>
+    </div>
+  </div>
+  <div class="modal-body bg-transparent">
+    <span>{{ modalCuerpo }}<br />{{ modalContenido }}</span>
+  </div>
+  <div class="modal-footer py-2">
+    <button class="btn btn-theme btn-sm" (click)="eliminarBoton()">Deshabilitar</button>
+    <button class="btn btn-outline-dark btn-sm" (click)="cerrarModal()">Cancelar</button>
+  </div>
+</ng-template>
+
+<ng-template #modalAdvertencia>
+  <div class="modal-header bg-dark text-white py-2">
+    <h5 class="modal-title">{{ modalTitulo }}</h5>
+    <div>
+      <a href="javascript:;" class="btn btn-xs btn-danger btnCerrar" (click)="modalRef.hide()">
+        <i class="fa fa-times"></i>
+      </a>
+    </div>
+  </div>
+  <div class="modal-body bg-transparent">
+    <span
+      >{{ modalCuerpo }}<br />
+      {{ modalContenido }}</span
+    >
+  </div>
+  <div class="modal-footer py-2">
+    <button class="btn btn-theme btn-sm" (click)="estadoBoton()">Habilitar</button>
+    <button class="btn btn-outline-dark btn-sm" (click)="cerrarModal()">Cancelar</button>
+  </div>
+</ng-template>
+
+<ng-template #spinner>
+  <div class="col-md text-center">
+    <div class="spinner-border text-primary ml-auto" style="width: 4rem; height: 4rem" role="status" aria-hidden="true"></div>
+    <div class="col-md text-center">
+      <span class="text-primary" style="font-size: 25">
+        <h2>Cargando información</h2>
+      </span>
+    </div>
+  </div>
+</ng-template>
+<!--END ventanas modales-->
